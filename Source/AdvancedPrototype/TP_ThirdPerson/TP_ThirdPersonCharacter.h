@@ -37,6 +37,8 @@ private:
 
 	void CheckJump();
 
+	void Sprint();
+
 	UPROPERTY()
 		bool jumping;
 
@@ -45,5 +47,11 @@ private:
 
 	UPROPERTY()
 		USpringArmComponent* arm;
+
+	UPROPERTY()
+		float speed;
+	
+	UPROPERTY()
+		bool walking;
 };
 

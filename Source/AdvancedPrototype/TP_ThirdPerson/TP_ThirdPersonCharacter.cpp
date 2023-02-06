@@ -40,6 +40,10 @@ ATP_ThirdPersonCharacter::ATP_ThirdPersonCharacter()
 
 	jumping = false;
 
+	speed = 0.5f;
+	
+	walking = true;
+
 	levels.Add("ThirdPersonMap");
 	levels.Add("StarterMap");
 	levels.Add("Minimal_Default");
@@ -70,6 +74,9 @@ void ATP_ThirdPersonCharacter::SetupPlayerInputComponent(class UInputComponent* 
 	InputComponent->BindAction("Jump", IE_Pressed, this, &ATP_ThirdPersonCharacter::CheckJump);
 	InputComponent->BindAction("Jump", IE_Released, this, &ATP_ThirdPersonCharacter::CheckJump);
 
+	InputComponent->BindAction("Sprint", IE_Pressed, this, &ATP_ThirdPersonCharacter::Sprint);
+	InputComponent->BindAction("Sprint", IE_Released, this, &ATP_ThirdPersonCharacter::Sprint);
+
 	PlayerInputComponent->BindAxis("ChangeLevel", this, &ATP_ThirdPersonCharacter::SwitchLevel);
 }
 
@@ -77,7 +84,7 @@ void ATP_ThirdPersonCharacter::HorizontalMove(float value)
 {
 	if (value)
 	{
-		AddMovementInput(GetActorRightVector(), value);
+		AddMovementInput(GetActorRightVector(), value * speed);
 	}
 }
 
@@ -85,7 +92,7 @@ void ATP_ThirdPersonCharacter::VerticalMove(float value)
 {
 	if (value)
 	{
-		AddMovementInput(GetActorForwardVector(), value);
+		AddMovementInput(GetActorForwardVector(), value * speed);
 	}
 }
 
@@ -118,6 +125,20 @@ void ATP_ThirdPersonCharacter::VerticalRotation(float value)
 		{
 			arm->AddLocalRotation(FRotator(value, 0, 0));
 		}
+	}
+}
+
+void ATP_ThirdPersonCharacter::Sprint()
+{
+	walking = !walking;
+
+	if (walking)
+	{
+		speed = 0.5f;
+	}
+	else
+	{
+		speed = 1;
 	}
 }
 
