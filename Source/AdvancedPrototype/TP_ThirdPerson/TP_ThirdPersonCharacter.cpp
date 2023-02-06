@@ -40,7 +40,7 @@ ATP_ThirdPersonCharacter::ATP_ThirdPersonCharacter()
 
 	jumping = false;
 
-	speed = 0.5f;
+	speed = 1f;
 	
 	walking = true;
 
