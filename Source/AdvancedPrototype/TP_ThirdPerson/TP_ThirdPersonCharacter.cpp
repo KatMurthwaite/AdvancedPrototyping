@@ -40,7 +40,7 @@ ATP_ThirdPersonCharacter::ATP_ThirdPersonCharacter()
 
 	jumping = false;
 
-	speed = 1f;
+	speed = 0.5f;
 	
 	walking = true;
 
@@ -106,7 +106,7 @@ void ATP_ThirdPersonCharacter::HorizontalRotation(float value)
 
 void ATP_ThirdPersonCharacter::CheckJump()
 {
-	GetCharacterMovement()->JumpZVelocity = 600.f;
+	GetCharacterMovement()->JumpZVelocity = 800.0f;
 
 	if (jumping)
 	{
@@ -140,7 +140,7 @@ void ATP_ThirdPersonCharacter::Sprint()
 	}
 	else
 	{
-		speed = 1;
+		speed = 1.0f;
 	}
 }
 
