@@ -25,16 +25,16 @@ ATP_ThirdPersonCharacter::ATP_ThirdPersonCharacter()
 	arm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 
 	arm->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-	arm->TargetArmLength = 300.f;
-	arm->SetRelativeRotation(FRotator(-45.f, 0.f, 0.f));
+	arm->TargetArmLength = 300.0f;
+	arm->SetRelativeRotation(FRotator(-45.f, 0.0f, 0.0f));
 
-	arm->bEnableCameraLag = true;
-	arm->CameraLagSpeed = 2;
-	arm->CameraLagMaxDistance = 1.5f;
+	//arm->bEnableCameraLag = true;
+	//arm->CameraLagSpeed = 2;
+	//arm->CameraLagMaxDistance = 1.5f;
 
-	arm->bEnableCameraRotationLag = true;
-	arm->CameraRotationLagSpeed = 4;
-	arm->CameraLagMaxTimeStep = 1;
+	//arm->bEnableCameraRotationLag = true;
+	//arm->CameraRotationLagSpeed = 4;
+	//arm->CameraLagMaxTimeStep = 1;
 
 	camera->AttachToComponent(arm, FAttachmentTransformRules::KeepRelativeTransform);
 
@@ -43,6 +43,8 @@ ATP_ThirdPersonCharacter::ATP_ThirdPersonCharacter()
 	speed = 0.5f;
 	
 	walking = true;
+
+	crouching = false;
 
 	levels.Add("ThirdPersonMap");
 	levels.Add("StarterMap");
@@ -76,6 +78,9 @@ void ATP_ThirdPersonCharacter::SetupPlayerInputComponent(class UInputComponent* 
 
 	InputComponent->BindAction("Sprint", IE_Pressed, this, &ATP_ThirdPersonCharacter::Sprint);
 	InputComponent->BindAction("Sprint", IE_Released, this, &ATP_ThirdPersonCharacter::Sprint);
+
+	InputComponent->BindAction("Crouch", IE_Pressed, this, &ATP_ThirdPersonCharacter::CheckCrouch);
+	InputComponent->BindAction("Crouch", IE_Released, this, &ATP_ThirdPersonCharacter::CheckCrouch);
 
 	PlayerInputComponent->BindAxis("ChangeLevel", this, &ATP_ThirdPersonCharacter::SwitchLevel);
 }
@@ -141,6 +146,20 @@ void ATP_ThirdPersonCharacter::Sprint()
 	else
 	{
 		speed = 1.0f;
+	}
+}
+
+void ATP_ThirdPersonCharacter::CheckCrouch()
+{
+	if (crouching)
+	{
+		crouching = false;
+		UnCrouch();
+	}
+	else
+	{
+		crouching = true;
+		Crouch();
 	}
 }
 

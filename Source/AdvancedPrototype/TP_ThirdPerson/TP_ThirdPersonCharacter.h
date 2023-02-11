@@ -39,6 +39,8 @@ private:
 
 	void Sprint();
 
+	void CheckCrouch();
+
 	UPROPERTY()
 		bool jumping;
 
@@ -53,5 +55,8 @@ private:
 	
 	UPROPERTY()
 		bool walking;
+
+	UPROPERTY()
+		bool crouching;
 };
 
