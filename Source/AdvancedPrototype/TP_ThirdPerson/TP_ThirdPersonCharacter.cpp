@@ -17,26 +17,24 @@ ATP_ThirdPersonCharacter::ATP_ThirdPersonCharacter()
 
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 
-	bUseControllerRotationYaw = false;
-
-	camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-	//camera->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-
-	arm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
-
-	arm->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	arm = CreateAbstractDefaultSubobject<USpringArmComponent>(TEXT("Camera boom"));
+	arm->SetupAttachment(RootComponent);
 	arm->TargetArmLength = 300.0f;
-	arm->SetRelativeRotation(FRotator(-45.f, 0.0f, 0.0f));
+	arm->bUsePawnControlRotation = true;
 
-	//arm->bEnableCameraLag = true;
-	//arm->CameraLagSpeed = 2;
-	//arm->CameraLagMaxDistance = 1.5f;
+	camera = CreateAbstractDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	camera->SetupAttachment(arm, USpringArmComponent::SocketName);
+	camera->bUsePawnControlRotation = false;
 
-	//arm->bEnableCameraRotationLag = true;
-	//arm->CameraRotationLagSpeed = 4;
-	//arm->CameraLagMaxTimeStep = 1;
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false;
+	bUseControllerRotationRoll = false;
 
-	camera->AttachToComponent(arm, FAttachmentTransformRules::KeepRelativeTransform);
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f);
+
+	TurnRate = 45;
+	LookUpRate = 45;
 
 	jumping = false;
 
@@ -87,26 +85,29 @@ void ATP_ThirdPersonCharacter::SetupPlayerInputComponent(class UInputComponent* 
 
 void ATP_ThirdPersonCharacter::HorizontalMove(float value)
 {
-	if (value)
+	if (Controller != NULL && value != 0.0)
 	{
-		AddMovementInput(GetActorRightVector(), value * speed);
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator Yaw(0, Rotation.Yaw, 0);
+		const FVector Direction = FRotationMatrix(Yaw).GetUnitAxis(EAxis::Y);
+		AddMovementInput(Direction, value * speed);
 	}
 }
 
 void ATP_ThirdPersonCharacter::VerticalMove(float value)
 {
-	if (value)
+	if (Controller != NULL && value != 0.0)
 	{
-		AddMovementInput(GetActorForwardVector(), value * speed);
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator Yaw(0, Rotation.Yaw, 0);
+		const FVector Direction = FRotationMatrix(Yaw).GetUnitAxis(EAxis::X);
+		AddMovementInput(Direction, value * speed);
 	}
 }
 
 void ATP_ThirdPersonCharacter::HorizontalRotation(float value)
 {
-	if (value)
-	{
-		AddActorLocalRotation(FRotator(0, value, 0));
-	}
+	AddControllerYawInput(value * GetWorld()->GetDeltaSeconds() * TurnRate);
 }
 
 void ATP_ThirdPersonCharacter::CheckJump()
@@ -125,14 +126,7 @@ void ATP_ThirdPersonCharacter::CheckJump()
 
 void ATP_ThirdPersonCharacter::VerticalRotation(float value)
 {
-	if (value)
-	{
-		float temp = arm->GetRelativeRotation().Pitch + value;
-		if (temp < 25 && temp > -65)
-		{
-			arm->AddLocalRotation(FRotator(value, 0, 0));
-		}
-	}
+	AddControllerPitchInput(value * GetWorld()->GetDeltaSeconds() * LookUpRate);
 }
 
 void ATP_ThirdPersonCharacter::Sprint()

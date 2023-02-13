@@ -24,10 +24,11 @@ public:
 
 protected:
 	virtual void Tick(float DeltaTime) override;
-
-	// APawn interface
+	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	// End of APawn interface
+
+	float TurnRate;
+	float LookUpRate;
 
 private:
 	void HorizontalMove(float value);
