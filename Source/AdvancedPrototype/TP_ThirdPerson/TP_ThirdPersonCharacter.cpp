@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #include "TP_ThirdPersonCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -7,9 +5,6 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
-
-//////////////////////////////////////////////////////////////////////////
-// ATP_ThirdPersonCharacter
 
 ATP_ThirdPersonCharacter::ATP_ThirdPersonCharacter()
 {
@@ -33,8 +28,9 @@ ATP_ThirdPersonCharacter::ATP_ThirdPersonCharacter()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.0f, 0.0f);
 
-	TurnRate = 45;
-	LookUpRate = 45;
+	turnRate = 45;
+	
+	lookUpRate = 45;
 
 	jumping = false;
 
@@ -43,6 +39,8 @@ ATP_ThirdPersonCharacter::ATP_ThirdPersonCharacter()
 	walking = true;
 
 	crouching = false;
+
+	isClimbing = false;
 
 	levels.Add("ThirdPersonMap");
 	levels.Add("StarterMap");
@@ -58,9 +56,6 @@ void ATP_ThirdPersonCharacter::Tick(float DeltaTime)
 		Jump();
 	}
 }
-
-//////////////////////////////////////////////////////////////////////////
-// Input
 
 void ATP_ThirdPersonCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
@@ -92,6 +87,11 @@ void ATP_ThirdPersonCharacter::HorizontalMove(float value)
 		const FVector Direction = FRotationMatrix(Yaw).GetUnitAxis(EAxis::Y);
 		AddMovementInput(Direction, value * speed);
 	}
+
+	if (isClimbing)
+	{
+		AddMovementInput(FVector(0, 0, 0), value);
+	}
 }
 
 void ATP_ThirdPersonCharacter::VerticalMove(float value)
@@ -103,11 +103,16 @@ void ATP_ThirdPersonCharacter::VerticalMove(float value)
 		const FVector Direction = FRotationMatrix(Yaw).GetUnitAxis(EAxis::X);
 		AddMovementInput(Direction, value * speed);
 	}
+
+	if (isClimbing)
+	{
+		AddMovementInput(FVector(0, 0, 0), value);
+	}
 }
 
 void ATP_ThirdPersonCharacter::HorizontalRotation(float value)
 {
-	AddControllerYawInput(value * GetWorld()->GetDeltaSeconds() * TurnRate);
+	AddControllerYawInput(value * GetWorld()->GetDeltaSeconds() * turnRate);
 }
 
 void ATP_ThirdPersonCharacter::CheckJump()
@@ -126,7 +131,7 @@ void ATP_ThirdPersonCharacter::CheckJump()
 
 void ATP_ThirdPersonCharacter::VerticalRotation(float value)
 {
-	AddControllerPitchInput(value * GetWorld()->GetDeltaSeconds() * LookUpRate);
+	AddControllerPitchInput(value * GetWorld()->GetDeltaSeconds() * lookUpRate);
 }
 
 void ATP_ThirdPersonCharacter::Sprint()

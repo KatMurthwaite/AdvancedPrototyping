@@ -1,5 +1,3 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -27,11 +25,10 @@ protected:
 	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	float TurnRate;
-	float LookUpRate;
-
 private:
+	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void HorizontalMove(float value);
+	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void VerticalMove(float value);
 	void HorizontalRotation(float value);
 	void VerticalRotation(float value);
@@ -42,22 +39,22 @@ private:
 
 	void CheckCrouch();
 
-	UPROPERTY()
-		bool jumping;
-
-	UPROPERTY()
-		UCameraComponent* camera;
-
-	UPROPERTY()
-		USpringArmComponent* arm;
-
-	UPROPERTY()
-		float speed;
+	bool jumping;
 	
-	UPROPERTY()
-		bool walking;
+	UCameraComponent* camera;
 
-	UPROPERTY()
-		bool crouching;
+	USpringArmComponent* arm;
+
+	float speed;
+	
+	bool walking;
+
+	bool crouching;
+
+	float turnRate;
+	
+	float lookUpRate;
+	
+	bool isClimbing;
 };
 
