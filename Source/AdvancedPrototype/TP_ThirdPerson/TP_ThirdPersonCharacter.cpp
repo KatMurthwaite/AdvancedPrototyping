@@ -12,12 +12,12 @@ ATP_ThirdPersonCharacter::ATP_ThirdPersonCharacter()
 
 	AutoPossessPlayer = EAutoReceiveInput::Player0;
 
-	arm = CreateAbstractDefaultSubobject<USpringArmComponent>(TEXT("Camera boom"));
+	arm = CreateDefaultSubobject<USpringArmComponent>(TEXT("Camera boom"));
 	arm->SetupAttachment(RootComponent);
 	arm->TargetArmLength = 300.0f;
 	arm->bUsePawnControlRotation = true;
 
-	camera = CreateAbstractDefaultSubobject<UCameraComponent>(TEXT("Camera"));
+	camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	camera->SetupAttachment(arm, USpringArmComponent::SocketName);
 	camera->bUsePawnControlRotation = false;
 
@@ -51,10 +51,10 @@ void ATP_ThirdPersonCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (jumping)
-	{
-		Jump();
-	}
+	//if (jumping)
+	//{
+	//	Jump();
+	//}
 }
 
 void ATP_ThirdPersonCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -126,6 +126,7 @@ void ATP_ThirdPersonCharacter::CheckJump()
 	else
 	{
 		jumping = true;
+		Jump();
 	}
 }
 
