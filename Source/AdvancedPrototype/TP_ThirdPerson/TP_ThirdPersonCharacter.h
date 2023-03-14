@@ -37,6 +37,7 @@ private:
 
 	void Sprint();
 
+	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void CheckCrouch();
 
 	bool jumping;
