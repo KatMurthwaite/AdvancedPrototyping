@@ -50,11 +50,6 @@ ATP_ThirdPersonCharacter::ATP_ThirdPersonCharacter()
 void ATP_ThirdPersonCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	//if (jumping)
-	//{
-	//	Jump();
-	//}
 }
 
 void ATP_ThirdPersonCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
