@@ -112,7 +112,7 @@ void ATP_ThirdPersonCharacter::HorizontalRotation(float value)
 
 void ATP_ThirdPersonCharacter::CheckJump()
 {
-	GetCharacterMovement()->JumpZVelocity = 650.0f;
+	GetCharacterMovement()->JumpZVelocity = 800.0f;
 
 	if (jumping)
 	{
